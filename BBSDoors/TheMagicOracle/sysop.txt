@@ -1,0 +1,336 @@
+                         THE MAGIC ORACLE v15.4
+          "If you've got questions, The Magic Oracle's got answers."
+                         (C)2020 by Sean Dennis
+                      Another Cheepware production!
+                          https://outpostbbs.net
+==============================================================================
+This program is a BBS door.  If you do not know what that is, you really
+shouldn't try to use this program.  This door is for entertainment purposes
+only, of course.
+
+This door is freeware.  If you have been charged for its use, both you and I
+have been ripped off!
+
+A quick table of contents:
+
+   I. LICENSE AND DISCLAIMER
+  II. WHAT IS THE MAGIC ORACLE?
+ III. UPGRADING FROM A PREVIOUS VERSION OF TMO
+  IV. SETTING UP TMO
+   V. CUSTOMIZING TMO
+  VI. COPYRIGHT NOTICES/CODE CREDITS
+ VII. CREDIT AND THANKS
+VIII. CONTACTING THE AUTHOR
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+I. LICENSE AND DISCLAIMER
+
+  This program and its associated files are copyrighted by Sean Dennis.  If
+  this program breaks, you own both pieces.  Support for this program may
+  end at any time with or without notice.
+
+                         -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+II. WHAT IS THE MAGIC ORACLE?
+
+  The Magic Oracle (TMO) is a BBS door that can be run locally or through a
+  BBS that is capable of running 16-bit DOS doors.  This door is a knockoff
+  of a very sarcastic Magic 8 Ball(R).  Features of this door:
+
+    - Supports DOOR.SYS and DORINFO1.DEF drop files.
+    - DOS, DesqView, Windows, and OS/2 timeslicer friendly.
+    - ANSI.SYS not needed as the door has its own ANSI driver.
+    - Uses Telegard-style color codes for customization.
+
+  This door runs under DOS, 32-bit Windows, OS/2 (including eComStation and
+  ArcaOS), and Linux using DOSemu.
+
+  Requirements to run TMO:
+
+    - A BBS that is capable of running 16-bit DOS doors and can produce
+      either DOOR.SYS or DORINFO1.DEF dropfiles.
+    - A FOSSIL driver.
+    - ANSI.SYS is NOT required as the door has its own ANSI driver.
+    - The user must have ANSI emulation enabled.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+III. UPGRADING FROM A PREVIOUS VERSION OF TMO
+
+  If you're upgrading from a previous version, here's some important things
+  you need to know:
+
+    - Before you install this, back up your ANSWER.DAT file.
+    - This version of TMO does not require any .CFG or .CTL file as it reads
+      all its needed information from the dropfile.  You may safely delete all
+      *.CFG and *.CTL files as well as MAKECTL.EXE.
+    - This version uses Telegard-style color codes.  If your version uses any
+      other color codes in the *.DAT files (such as TDK or pipe), you will need
+      to convert the color codes to Telegard-style color codes.
+    - This version has multinode support in it.  Yep.  Only took me two
+      decades to figure it out ...
+    - This upgrade is highly recommended since I do not support ANY of the
+      previous versions of The Magic Oracle.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+IV. SETTING UP TMO
+
+  Thankfully, TMO is very easy to setup.  Here's the steps to set up a new
+  installation:
+
+    - Create a directory for the door and extract the archive in it.  If
+      you have customized ANSWER.DAT and/or LANGUAGE.DAT files, you
+      can copy them over the stock DAT files (make sure you change the
+      color codes as mentioned in "Customizing TMO").
+    - Run ORACLE /L to create INDEX.DAT (a small file that tells TMO
+      how many "answers" are in ANSWERS.DAT; makes it faster for your
+      users).
+    - Create a batch file to run the door from your BBS (or if you run
+      Synchronet, you can run it directly from the door menu).
+    - Add TMO into your BBS's door menu and you're set.
+
+  Command line parameters you can use:
+
+    /N<node> - Specifies what node number to use.  Single-line BBSes
+               don't need to use this parameter. (DORINFO1.DEF)
+    /D<path> - Specifies the full path and filename of what dropfile to
+               use (DOOR.SYS or DORINFO1.DEF).
+    /F       - Force ANSI emulation on (doesn't always work!).
+    /L       - Run the door in local mode.
+    /?       - View the door's help screen (or ORACLE on the command line).
+
+  You must specify the path to the dropfile, and if you are using 
+  DORINFO1.DEF, the node number in the calling command line.  If your BBS 
+  requires a batch file to run a door like mine does, here's how to do 
+  it.  I run a multinode Maximus/2 BBS and this is my setup to run 
+  TMO.  I created a batch file called RUNTMO.BAT:
+
+    @echo off
+    d:
+    cd\doors\oracle
+    oracle /n%1 /dd:\max\node%1\dorinfo1.def
+    cd\max\node%1
+
+  If you're going to use DOOR.SYS, you can use this batch file:
+
+    @echo off
+    d:
+    cd\doors\oracle
+    oracle /dd:\max\node%1\door.sys
+    cd\max\node%1
+
+  TIP: If you have set up one of my doors already and have created this
+       batch file, just copy that and substitute the name of this door
+       in that file.  It'll save you some time!
+
+  How I set up TMO in Maximus's MENUS.CTL:
+
+  NoDsp Display_File    Misc\dorinfo    Unverified "T"
+           Xtern_DOS    runtmo.bat_%k   Unverified "The Magic Oracle"
+
+  DORINFO is my MECCA file to create the DORINFO1.DEF dropfile.
+  RUNTMO.BAT is located in \MAX.
+
+  You can pass the node number to the batch file from your BBS (please
+  check your BBS documentation on how to do this).  If you're running
+  a single-line BBS, you can omit the /N parameter and the door will
+  assume that you are running a single-line BBS.  You must still make
+  sure that the correct fully qualified path to your dropfile is used.
+
+  If you need an example on how to use the door, just type ORACLE at
+  the command prompt and a small help screen will appear.
+
+  A quick note about the status bar you see when the door is running on
+  your BBS with a remote caller...the status bar looks like this:
+
+    <door name and author information>
+    <caller name>     <node #> <OS> <COM port> <emulation> <KP> <TL>
+
+  It's easy to understand, but there's a few things you should know:
+
+    - <OS> will always show as "DOS" under Windows.  If you're running
+      the door under OS/2, eComStation, or ArcaOS, it will say "OS/2".
+    - <KP> is the number of seconds since the last keypress.  Due to the
+      way multitasking OSes work, this may not be updated every second,
+      but it is accurate.
+    - <TL> is the time left before the door kicks the user off.
+
+  Some miscellaneous notes about the door from user reports:
+
+    - Some sysops are having problems using DOOR.SYS.  Since there's so many
+      variations on how DOOR.SYS is used, I recommend using DORINFO1.DEF as
+      that is more standardized.  If you do use DOOR.SYS, you need to use the
+      full 52-line version as produced by GAP BBS software (whose authors 
+      developed the original DOOR.SYS dropfile).  Any other version of
+      DOOR.SYS, such as the "short" version Doorway uses, will not work.
+    - My doors running under Windows XP are occasionally having a hard
+      time figuring out whether they are using ANSI or not; you may need to
+      force ANSI manually to the door (changing the dropfile if possible) if
+      you have problems with this.  You can also use the /F parameter to force
+      ANSI emulation on but this does not always work.
+    - Doors running under DOSemu in Linux may have issues with not running due
+      to the executable being compressed.  This is a rather uncommon issue but
+      if you are having problems, please contact me directly and I can produce
+      an uncompressed executable for you.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+V. CUSTOMIZING TMO
+
+  ANSWERS.DAT is a standard text file.  You can have up to 32,767
+  multiple-line "answers" in the file.  Each full answer is separated
+  by a percent sign (%) at the top and bottom of the answer but every
+  line in each individual answer must be shorter than 79 characters or
+  else unpredictable results will occur.  The line length does NOT
+  include the length of the color codes as they are stripped out of the
+  string as it's displayed.  After you modify ANSWERS.DAT, delete INDEX.DAT
+  and run TMO locally to rebuild the index file.
+
+  TMO supports Telegard-style color codes in ANSWERS.DAT. The advantage to
+  these codes is that you can change the foreground and background colors 
+  at the same time.  Each color code start with the color sequence indicator
+  (`), followed by two characters from 0 to 9, A to F, form the color code.
+
+  The color codes are listed below (low and high intensity side by side).
+
+  REGULAR COLORS
+
+           Black   Blue    Green   Cyan    Red     Magenta Brown   White
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Black   | 00 08 | 01 09 | 02 0A | 03 0B | 04 0C | 05 0D | 06 0E | 07 0F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Blue    | 10 18 | 11 19 | 12 1A | 13 1B | 14 1C | 15 1D | 16 1E | 17 1F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Green   | 20 28 | 21 29 | 22 2A | 23 2B | 24 2C | 25 2D | 26 2E | 27 2F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Cyan    | 30 38 | 31 39 | 32 3A | 33 3B | 34 3C | 35 3D | 36 3E | 37 3F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Red     | 40 48 | 41 49 | 42 4A | 43 4B | 44 4C | 45 4D | 46 4E | 47 4F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Magenta | 50 58 | 51 59 | 52 5A | 53 5B | 54 5C | 55 5D | 56 5E | 57 5F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Brown   | 60 68 | 61 69 | 62 6A | 63 6B | 64 6C | 65 6D | 66 6E | 67 6F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  White   | 70 78 | 71 79 | 72 7A | 73 7B | 74 7C | 75 7D | 76 7E | 77 7F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+
+  BLINKING COLORS
+
+           Black   Blue    Green   Cyan    Red     Magenta Brown   White
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Black   | 80 88 | 81 89 | 82 8A | 83 8B | 84 8C | 85 8D | 86 8E | 87 8F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Blue    | 90 98 | 91 99 | 92 9A | 93 9B | 94 9C | 95 9D | 96 9E | 97 9F |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Green   | A0 A8 | A1 A9 | A2 AA | A3 AB | A4 AC | A5 AD | A6 AE | A7 AF |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Cyan    | B0 B8 | B1 B9 | B2 BA | B3 BB | B4 BC | B5 BD | B6 BE | B7 BF |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Red     | C0 C8 | C1 C9 | C2 CA | C3 CB | C4 CC | C5 CD | C6 CE | C7 CF |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Magenta | D0 D8 | D1 D9 | D2 DA | D3 DB | D4 DC | D5 DD | D6 DE | D7 DF |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  Brown   | E0 E8 | E1 E9 | E2 EA | E3 EB | E4 EC | E5 ED | E6 EE | E7 EF |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+  White   | F0 F8 | F1 F9 | F2 FA | F3 FB | F4 FC | F5 FD | F6 FE | F7 FF |
+          +-------+-------+-------+-------+-------+-------+-------+-------+
+
+      Examples:
+
+      `0CImproper password!  (sets the foreground color to bright red)
+      `FDPaging the sysop... (sets the foreground color to blinking magenta
+                              and the background color to white)
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+VI. COPYRIGHT NOTICES/CODE CREDITS
+
+  "The Magic Oracle" (C) Sean Dennis.
+  All rights reserved.
+  Cheepware is a trademark of Sean Dennis.
+
+  FKFOSSIL v1.02 (C)1993-1994 Tim Strike and Forbidden Knights Systems.
+
+  Magic 8 Ball(R) is a registered trademark of Mattel.
+
+  This product uses the aPACK executable compressor.
+  Copyright (c) 1997-2012 by Joergen Ibsen.  All rights reserved.
+  For more information, please visit: http://www.ibsensoftware.com/
+  
+  This door contains code written by Michael Preslar, Larry Athey,
+  Shawn Highfield, Doug Reynolds, Michael Dillon, et al. Used
+  with permission.  Thank you all for helping me out.
+
+  The color code information was taken from the Telegard BBS
+  documentation written by Tim Strike, et al. and was partially edited
+  by me for use with this documentation.
+
+  All other copyrighted/trademarked names used in this documentation
+  are property of their respective owners and are used for
+  identification purposes only.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+VII. CREDITS AND THANKS
+
+  The Magic Oracle was developed using Turbo Pascal 7 (RTE200 patched) and
+  FKFOSSIL v1.02 under ArcaOS 5.0.3 and DOSemu under Devuan Linux.
+
+  The main executable was packed using aPACK.
+
+  The door was initially tested on my own BBS using Maximus/2 v3.01 under
+  ArcaOS 5.0.3.
+
+  I'd like to thank the following people for their help:
+
+    - All the sysops, users and fellow programmers who have helped me
+      learn and understand over the years.  Thank you all for the
+      invaluable help and experience.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+VIII. CONTACTING THE AUTHOR
+
+  If you have any comments, suggestions or ideas, I'd love to hear from you.
+  If you have a bug report, I need to hear from you.  Please make sure you
+  have all the needed details handy for me so I can try to reproduce the
+  problem (such as what you were doing when the problem occurred).
+
+  You can contact me via the following ways:
+
+    - Echomail: This is my preferred method of support.  You can find me
+      in MIN_BBS in Micronet and CHWARE and BBS_CARNIVAL in Fidonet.
+    - Netmail: 1:18/200@Fidonet or 618:618/1@Micronet
+    - BBS: telnet://bbs.outpostbbs.net:10123
+    - Email: sysop@outpostbbs.net
+ 
+  If you'd like more information about Cheepware, you can get it via:
+
+    - BBS: Telnet to bbs.outpostbbs.net:10123 and look in the
+      BBS.CHEEP filearea.
+    - FTP: Connect to bbsftp.outpostbbs.net via anonymous FTP and look in
+      /cheepware.
+    - Filebone: You can connect to the CH-WARE filebone in Fidonet.
+      Ask your uplink on how to connect to it.  You'll get everything
+      I release this way automatically.  All of the programs I hatch
+      into CH-WARE are available as a WWW mirror at the following:
+      http://www.filegate.net/ch-ware/
+      I also hatch out my programs in MIN_MISC in Micronet.  You can
+      find out more information about Micronet at https://www.minftn.net.
+    - Email FREQ: Send an email to bbs@outpostbbs.net with the subject of
+      "FREQ" (without quotes) and the subject of "FREQ CHEEP" (without
+      quotes).  A list of all available Cheepware will be emailed
+      to you.
+    - WWW: https://outpostbbs.net
+
+                         -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+ Thank you for using Cheepware.  Support your local BBS scene!
+
+ -- Sean Dennis
+    Cheepware Author
+
+<EOF>
+	

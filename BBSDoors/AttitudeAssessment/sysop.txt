@@ -1,0 +1,260 @@
+                          ATTITUDE ASSESSMENT v2.8
+                     Written and (C)2020 by Sean Dennis
+                        Another Cheepware production!
+                           https://outpostbbs.net
+==============================================================================
+This program is a BBS door.  If you do not know what that is, you really
+shouldn't try to use this program.  This door is for entertainment purposes
+only, of course.
+
+This door is freeware.  If you have been charged for its use, both you and I
+have been ripped off!
+
+A quick table of contents:
+
+   I. LICENSE AND DISCLAIMER
+  II. WHAT IS ATTITUDE ASSESSMENT?
+ III. UPGRADING FROM A PREVIOUS VERSION OF AA
+  IV. SETTING UP AA
+   V. CUSTOMIZING AA
+  VI. COPYRIGHT NOTICES/CODE CREDITS
+ VII. CREDIT AND THANKS
+VIII. CONTACTING THE AUTHOR
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+I. LICENSE AND DISCLAIMER
+
+  This program and its associated files are copyrighted by Sean Dennis.  If
+  this program breaks, you own both pieces.  Support for this program may
+  end at any time with or without notice.
+
+                        -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+II. WHAT IS ATTITUDE ASSESSMENT?
+
+  Attitude Assessment (AA) is a BBS door that can be run locally or through
+  a BBS that is capable of running 16-bit DOS doors.  This door is a
+  fun, non-scientific "attitude assessment".  Features of this door:
+
+    - Supports DOOR.SYS and DORINFO1.DEF drop files.
+    - DOS, DesqView, Windows, and OS/2 timeslicer friendly.
+    - ANSI.SYS not needed as the door has its own ANSI driver.
+
+  This door runs under DOS, 32-bit Windows, OS/2 (including eComStation and
+  ArcaOS), and Linux using DOSemu.
+
+
+  Requirements to run AA:
+
+    - A BBS that is capable of running 16-bit DOS doors and can produce
+      either DOOR.SYS or DORINFO1.DEF dropfiles.
+    - A FOSSIL driver.
+    - ANSI.SYS is NOT required as the door has its own ANSI driver.
+    - The user must have ANSI emulation enabled.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+III. UPGRADING FROM A PREVIOUS VERSION OF AA
+
+  If you're upgrading from a previous version, here's some important things
+  you need to know:
+
+    - Copy the new executable over the old one.  That's it!
+    - This version has multinode support in it.  Yep.  Only took me two
+      decades to figure it out ...
+    - This upgrade is highly recommended since I do not support ANY of the
+      previous versions of Attitude Assessment.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+IV. SETTING UP AA
+
+  Thankfully, AA is very easy to setup.  Here's the steps to set up a new
+  installation:
+
+    - Create a directory for the door and extract the archive in it.
+    - Create a batch file to run the door from your BBS (or if you run
+      Synchronet, you can run it directly from the door menu).
+    - Add AA into your BBS's door menu and you're set.
+
+  Command line parameters you can use:
+
+    /N<node> - Specifies what node number to use.  Single-line BBSes
+               don't need to use this parameter.  If your system uses
+               DOOR.SYS, you can skip this as the node number in use
+               is provided by DOOR.SYS.
+    /D<path> - Specifies the full path and filename of what dropfile to
+               use (DOOR.SYS or DORINFO1.DEF).
+    /F       - Force ANSI emulation on (doesn't always work!).
+    /L       - Run the door in local mode.
+    /?       - View the door's help screen (or ATTITUDE on the command line).
+
+  You must specify the path to the dropfile, and if you are using 
+  DORINFO1.DEF, the node number in the calling command line.  If your BBS 
+  requires a batch file to run a door like mine does, here's how to do 
+  it.  I run a multinode Maximus/2 BBS and this is my setup to run 
+  AA.  I created a batch file called RUNAA.BAT:
+
+    @echo off
+    d:
+    cd\doors\attitude
+    attitude /n%1 /dd:\max\node%1\dorinfo1.def
+    cd\max\node%1
+
+  If you're going to use DOOR.SYS, you can use this batch file:
+
+    @echo off
+    d:
+    cd\doors\attitude
+    attitude /dd:\max\node%1\door.sys
+    cd\max\node%1
+
+  TIP: If you have set up one of my doors already and have created this
+       batch file, just copy that and substitute the name of this door
+       in that file.  It'll save you some time!
+
+  How I set up AA in Maximus's MENUS.CTL:
+
+  NoDsp Display_File    Misc\dorinfo    Unverified "A"
+           Xtern_DOS    runaa.bat_%k    Unverified "Attitude Assessment"
+
+  DORINFO is my MECCA file to create the DORINFO1.DEF dropfile.
+  RUNAA.BAT is located in \MAX.
+
+  You can pass the node number to the batch file from your BBS (please
+  check your BBS documentation on how to do this).  If you're running
+  a single-line BBS, you can omit the /N parameter and the door will
+  assume that you are running a single-line BBS.  You must still make
+  sure that the correct fully qualified path to your dropfile is used.
+
+  If you need an example on how to use the door, just type ORACLE at
+  the command prompt and a small help screen will appear.
+
+  A quick note about the status bar you see when the door is running on
+  your BBS with a remote caller...the status bar looks like this:
+
+    <door name and author information>
+    <caller name>     <node #> <OS> <COM port> <emulation> <KP> <TL>
+
+  It's easy to understand, but there's a few things you should know:
+
+    - <OS> will always show as "DOS" under Windows.  If you're running
+      the door under OS/2, eComStation, or ArcaOS, it will say "OS/2".
+    - <KP> is the number of seconds since the last keypress.  Due to the
+      way multitasking OSes work, this may not be updated every second,
+      but it is accurate.
+    - <TL> is the time left before the door kicks the user off.
+
+  Some miscellaneous notes about the door from user reports:
+
+    - Some sysops are having problems using DOOR.SYS.  Since there's so many
+      variations on how DOOR.SYS is used, I recommend using DORINFO1.DEF as
+      that is more standardized.  If you do use DOOR.SYS, you need to use the
+      full 52-line version as produced by GAP BBS software (whose authors 
+      developed the original DOOR.SYS dropfile).  Any other version of
+      DOOR.SYS, such as the "short" version Doorway uses, will not work.
+    - My doors running under Windows XP are occasionally having a hard
+      time figuring out whether they are using ANSI or not; you may need to
+      force ANSI manually to the door (changing the dropfile if possible) if
+      you have problems with this.  You can also use the /F parameter to force
+      ANSI emulation on but this does not always work.
+    - Doors running under DOSemu in Linux may have issues with not running due
+      to the executable being compressed.  This is a rather uncommon issue but
+      if you are having problems, please contact me directly and I can produce
+      an uncompressed executable for you.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+V. CUSTOMIZING AA
+
+  Attitude Assessment cannot be customized.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+VI. COPYRIGHT NOTICES/CODE CREDITS
+
+  "Attitude Assessment" (C) Sean Dennis.
+  All rights reserved.
+  Cheepware is a trademark of Sean Dennis.
+
+  FKFOSSIL v1.02 (C)1993-1994 Tim Strike and Forbidden Knights Systems.
+  
+  This product uses the aPACK executable compressor.
+  Copyright (c) 1997-2012 by Joergen Ibsen, All Rights Reserved.
+  For more information, please visit: http://www.ibsensoftware.com/
+
+  This door contains code written by Michael Preslar, Larry Athey,
+  Shawn Highfield, Doug Reynolds, Michael Dillon, et al. Used
+  with permission.  Thank you all for helping me out.
+
+  The color code information was taken from the Telegard BBS
+  documentation written by Tim Strike, et al. and was partially edited
+  by me for use with this documentation.
+
+  All other copyrighted/trademarked names used in this documentation
+  are property of their respective owners and are used for
+  identification purposes only.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+VII. CREDITS AND THANKS
+
+  Attitude Assessment was developed using Turbo Pascal 7 (RTE200 patched) and
+  FKFOSSIL v1.02 under ArcaOS 5.0.3 and DOSemu under Devuan Linux.
+
+  The main executable was packed using aPACK.
+
+  The door was initially tested on my own BBS using Maximus/2 v3.01 under
+  ArcaOS 5.0.3.
+
+  I'd like to thank the following people for their help:
+
+    - All the sysops, users and fellow programmers who have helped me
+      learn and understand over the years.  Thank you all for the
+      invaluable help and experience.
+
+                          -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+VIII. CONTACTING THE AUTHOR
+
+  If you have any comments, suggestions or ideas, I'd love to hear from you.
+  If you have a bug report, I need to hear from you.  Please make sure you
+  have all the needed details handy for me so I can try to reproduce the
+  problem (such as what you were doing when the problem occurred).
+
+  You can contact me via the following ways:
+
+    - Echomail: This is my preferred method of support.  You can find me
+      in MIN_BBS in Micronet and CHWARE and BBS_CARNIVAL in Fidonet.
+    - Netmail: 1:18/200@Fidonet or 618:618/1@Micronet
+    - BBS: telnet://bbs.outpostbbs.net:10123
+    - Email: sysop@outpostbbs.net
+ 
+  If you'd like more information about Cheepware, you can get it via:
+
+    - BBS: Telnet to bbs.outpostbbs.net:10123 and look in the
+      BBS.CHEEP filearea.
+    - FTP: Connect to bbsftp.outpostbbs.net via anonymous FTP and look in
+      /cheepware.
+    - Filebone: You can connect to the CH-WARE filebone in Fidonet.
+      Ask your uplink on how to connect to it.  You'll get everything
+      I release this way automatically.  All of the programs I hatch
+      into CH-WARE are available as a WWW mirror at the following:
+      http://www.filegate.net/ch-ware/
+      I also hatch out my programs in MIN_MISC in Micronet.  You can
+      find out more information about Micronet at https://www.minftn.net.
+    - Email FREQ: Send an email to bbs@outpostbbs.net with the subject of
+      "FREQ" (without quotes) and the subject of "FREQ CHEEP" (without
+      quotes).  A list of all available Cheepware will be emailed
+      to you.
+    - WWW: https://outpostbbs.net
+
+                         -=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+ Thank you for using Cheepware.  Support your local BBS scene!
+
+ -- Sean Dennis
+    Cheepware Author
+
+<EOF>
